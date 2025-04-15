@@ -1,1 +1,1 @@
-hi, this repository is made to show my journey in web development
+hi, this repository is made for my journey in web development
