@@ -1,0 +1,269 @@
+body {
+  font-family: 'Baskervville', serif;
+  margin: 0;
+  background-color: #f9f9f7;
+  color: #333;
+}
+
+.nav-icons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #5a3c2e;
+  cursor: pointer;
+}
+
+
+.admin-header {
+  background-color: #fff;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.admin-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #3c2f2f;
+}
+
+.admin-container {
+  display: flex;
+  height: calc(100vh - 80px);
+}
+
+.admin-sidebar {
+  width: 200px;
+  background-color: #f2efe8;
+  border-right: 1px solid #ccc;
+  padding-top: 40px;
+}
+
+.admin-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-sidebar li {
+  padding: 15px 20px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #5c4531;
+}
+
+.admin-sidebar li:hover {
+  background-color: #e8ded2;
+  font-weight: bold;
+}
+
+.admin-main {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.admin-section {
+  display: block;
+}
+
+.hidden {
+  display: none;
+}
+
+.admin-buttons {
+  margin-bottom: 20px;
+}
+
+.admin-buttons button {
+  margin-right: 15px;
+  padding: 10px 20px;
+  background-color: #dedbd4;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: 'Baskervville', serif;
+}
+
+.admin-buttons button:hover {
+  background-color: #d6cabf;
+}
+
+#productTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#productTable th, #productTable td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+#productTable th {
+  background-color: #f6f1ea;
+  font-weight: bold;
+}
+
+#productTable img {
+  border-radius: 4px;
+}
+
+
+
+
+form {
+  max-width: 350px;
+  margin: 2rem auto;
+  padding: 2rem 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 1.1rem;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+  border-color: #7bb661;
+  outline: none;
+}
+
+textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+input[type="file"] {
+  border: none;
+  padding: 0;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.btn-primary {
+  background: #7bb661;
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #5a9442;
+}
+
+.btn-secondary {
+  background: #eee;
+  color: #333;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #ccc;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-form-container {
+  background: #fff;
+  padding: 2rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  min-width: 320px;
+  max-width: 95vw;
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+/* Messages Section */
+#messages h2 {
+  font-family: 'Baskervville', serif;
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #2c2c2c;
+}
+
+/* Table Styling */
+.message-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Baskervville', serif;
+  font-size: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* Table Headers */
+.message-table th {
+  background-color: #f5f5f5;
+  padding: 14px 18px;
+  text-align: left;
+  font-weight: 600;
+  color: #444;
+  border-bottom: 1px solid #ddd;
+  letter-spacing: 0.4px;
+}
+
+/* Table Cells */
+.message-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #eee;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Alternate row background */
+.message-table tr:nth-child(even) {
+  background-color: #fafafa;
+}

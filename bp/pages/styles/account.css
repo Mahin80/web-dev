@@ -1,0 +1,91 @@
+body {
+  font-family: 'Baskervville', serif;
+  margin: 0;
+  padding: 0;
+  background: #f9f9f9;
+}
+
+.main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 40px;
+  background-color:white;
+  font-family: 'Baskervville', serif;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #5a3c2e;
+}
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #5a3c2e;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #cf5e4f;
+}
+
+.nav-icons {
+  display: flex;
+  gap: 20px;
+  font-size: 1.2rem;
+  color: #5a3c2e;
+  cursor: pointer;
+}
+
+.nav-icons i:hover {
+  color: #cf5e4f;
+}
+
+.account-container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.account-sections {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.contact-info, .address-book {
+  flex: 1;
+  background: #f1f1f1;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.orders-record {
+  margin-top: 40px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+table th {
+  background-color: #f2f2f2;
+}

@@ -1,0 +1,236 @@
+/* styles/auth.css */
+
+body {
+  font-family: 'Baskervville', serif;
+  background: url('../images/sjam.jpg') no-repeat center center fixed;
+  background-size: cover;
+  margin: 0;
+  padding: 0;
+  color: #fff;
+}
+
+
+/* Header Styling */
+header {
+  background-color: #fff;
+  padding: 20px 0;
+  padding-left: 20px;
+  text-align:start;
+  border-bottom: 1px solid #eee;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+  
+  font-variant: small-caps;
+  color: #2c2c2c;
+}
+
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #5a3c2e;
+}
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #5a3c2e;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #cf5e4f;
+}
+
+.nav-icons {
+  display: flex;
+  gap: 20px;
+  font-size: 1.2rem;
+  color: #5a3c2e;
+  cursor: pointer;
+}
+
+.nav-icons i:hover {
+  color: #cf5e4f;
+}
+
+
+.main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 40px;
+  background-color:white;
+  font-family: 'Baskervville', serif;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+.auth-container {
+  background-color: rgba(0, 0, 0, 0.7);
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.auth-container h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #ffd700;
+}
+
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-container input {
+  margin: 10px 0;
+  padding: 12px;
+  border-radius: 6px;
+  border: none;
+  background-color: #333;
+  color: white;
+}
+
+.auth-container button {
+  background-color: #ffd700;
+  color: black;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.auth-container button:hover {
+  background-color: #ffcc00;
+}
+
+.auth-container p {
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.auth-container a {
+  color: #ffb6c1;
+  text-decoration: none;
+}
+
+.auth-container a:hover {
+  text-decoration: underline;
+}
+
+.auth-options {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin: 10px 0;
+  color: #ccc;
+}
+
+
+.cart-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 320px;
+  height: 100%;
+  color: black;
+  background-color: white;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  font-family: serif;
+}
+
+.cart-sidebar.show {
+  transform: translateX(0);
+}
+
+.cart-sidebar h2 {
+  margin-top: 0;
+  margin-left: 40px;
+ align-content: center;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.cart-item img {
+  width: 40px;
+  margin-right: 10px;
+}
+
+.cart-item span {
+  display: block;
+}
+
+.close-cart-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  position: absolute;
+  top: 18px;
+  left: 10px;
+}
+
+.remove-cart-item {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: red;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.cart-actions {
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+  gap: 4px;
+}
+
+.cart-actions button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.cart-actions button:hover {
+  color: #e74c3c;
+}
+.cart-count {
+  position: absolute;
+   top: 20px;
+  right: 20px;
+  font-family:serif;
+  background: #e74c3c;
+  color: #fff;
+  font-size: 0.8rem;
+  padding: 2px 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+}
