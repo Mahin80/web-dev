@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Account - Bloom Pantry</title>
+    <link rel="stylesheet" href="styles/account.css" />
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="logo">Bloom Pantry</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="products.html">Products</a>
+        </nav>
+        <div class="nav-icons">
+            <a href="signup.html"><i class="fa-regular fa-user"></i></a>
+            <i class="fa-solid fa-cart-shopping"></i>
+            <button id="logoutBtn"
+                style="margin-left: 10px; background: none; border: none; cursor: pointer; font-family: serif; color: #8a422b;">
+                Logout
+            </button>
+        </div>
+
+
+
+    </header>
+
+    <main class="account-container">
+        <h1>My Account</h1>
+
+        <section class="account-info">
+            <div class="contact-info">
+                <h2>Contact Information</h2>
+                <div id="contactDetails" class="info-box"></div>
+            </div>
+
+
+
+            <h2>Address Book</h2>
+            <div id="addressDetails" class="info-box"></div>
+            <button id="setAddressBtn" style="margin-top: 10px; padding: 5px 10px; cursor: pointer;">Set Default
+                Address</button>
+            </div>
+
+        </section>
+
+        <section class="orders-record">
+            <h2>Orders Record</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order#</th>
+                        <th>Date & Time</th>
+                        <th>Order Total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+
+            const token = getAuthToken();
+            console.log("Retrieved token:", token);
+
+            if (!token) {
+                alert('Please login first');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                //  Get user profile
+                console.log("Fetching user profile...");
+                const profileRes = await fetch('http://localhost:5000/auth/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token.trim()}` // ensure no extra space
+                    }
+                });
+
+                console.log("Profile response status:", profileRes.status);
+                if (profileRes.status !== 200) {
+                    const errorRes = await profileRes.json();
+                    console.warn("Profile error response:", errorRes);
+                    alert("Session expired or invalid token. Please log in again.");
+                    localStorage.removeItem("token");
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                const user = await profileRes.json();
+                console.log("User data received:", user);
+//<p><strong>Phone Number:</strong> ${user.phone}</p>
+                // Display profile
+                document.getElementById('contactDetails').innerHTML = `
+        <p><strong>First Name:</strong> ${user.firstName}</p>
+        <p><strong>Last Name:</strong> ${user.lastName}</p>
+        <p><strong>Email:</strong> ${user.email}</p>`;
+
+
+
+                //  Fetch orders
+                console.log("Fetching orders for user ID:", user.id);
+                const ordersRes = await fetch(`http://localhost:5000/orders/user/${user.id}`);
+
+                console.log("Orders response status:", ordersRes.status);
+                if (!ordersRes.ok) {
+                    throw new Error("Failed to fetch orders");
+                }
+
+                const orders = await ordersRes.json();
+                console.log("Orders received:", orders);
+
+                const tbody = document.getElementById('ordersTableBody');
+                orders.forEach(order => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+          <td>${order.id}</td>
+          <td>${new Date(order.createdAt).toLocaleString()}</td>
+          <td>$${order.total}</td>
+          <td>${order.status || 'Confirmed'}</td>`;
+                    tbody.appendChild(row);
+                });
+
+            } catch (err) {
+                console.error("Error loading account data:", err);
+                alert('Failed to load account data.');
+            }
+        });
+
+        function getAuthToken() {
+            return localStorage.getItem('token') || sessionStorage.getItem('token');
+        }
+
+        // Logout functionality
+        document.addEventListener('click', (e) => {
+            if (e.target.id === 'logoutBtn') {
+                localStorage.removeItem('token');
+                sessionStorage.removeItem('token');
+                alert('Logged out successfully.');
+                window.location.href = 'login.html';
+            }
+        });
+
+
+        document.addEventListener('click', async (e) => {
+            if (e.target.id === 'setAddressBtn') {
+                const newAddress = prompt('Enter your default shipping address:');
+                if (newAddress && newAddress.trim()) {
+                    try {
+                        const token = getAuthToken();
+                        const res = await fetch('http://localhost:5000/auth/address', {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({ address: newAddress.trim() })
+                        });
+                        const responseData = await res.json();
+                        console.log("Update address response:", responseData);
+
+                        if (res.ok) {
+                            alert('Address updated successfully.');
+                            document.getElementById('addressDetails').innerHTML = `<p>${newAddress}</p>`;
+                        } else {
+                            const err = await res.json();
+                            alert('Failed to update address: ' + err.message);
+                        }
+                    } catch (err) {
+                        alert('Error updating address.');
+                        console.error(err);
+                    }
+                }
+            }
+        });
+
+        // Display address
+        const addressBox = document.getElementById('addressDetails');
+        if (user.address) {
+            addressBox.innerHTML = `<p>${user.address}</p>`;
+        } else {
+            addressBox.innerHTML = `<p>No address saved yet.</p>`;
+        }
+
+
+
+    </script>
+
+</body>
+
+</html>

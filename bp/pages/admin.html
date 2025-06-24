@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Bloom Pantry</title>
+  <link rel="stylesheet" href="styles/admin.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Baskervville&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header class="admin-header">
+  
+    <div class="nav-icons">
+
+       <div >
+     <h1>Bloom Pantry</h1>
+   </div>
+      <button id="logoutBtn"
+        style=" margin-left: 10px; background: none; cursor: pointer; font-family: serif; color: #8a422b;">
+        Logout
+      </button>
+    </div>
+  </header>
+
+  <div class="admin-container">
+    <aside class="admin-sidebar">
+      <ul>
+        <li onclick="showSection('products')">Products</li>
+        <li onclick="showSection('messages')">Messages</li>
+      </ul>
+    </aside>
+    <main class="admin-main">
+      <section id="products" class="admin-section">
+        <h2>Products</h2>
+        <div class="admin-buttons">
+          <button onclick="addProduct()">Add Product</button>
+          <button onclick="deleteSelectedProduct()">Delete Product</button>
+          <button onclick="updateSelectedProduct()">Update Product</button>
+        </div>
+
+        <table id="productTable">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Category</th>
+            </tr>
+          </thead>
+          <tbody id="productBody">
+            <!-- Product rows  -->
+          </tbody>
+        </table>
+      </section>
+
+      <section id="messages" class="admin-section hidden">
+        <h2>Messages</h2>
+        <table class="message-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Message</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="messageBody">
+            <!-- Rows -->
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <form id="productForm" style="display:none; margin: 20px;" enctype="multipart/form-data">
+      <h3>Add New Product</h3>
+      <input type="text" name="name" placeholder="Product name" required /><br><br>
+      <textarea name="description" placeholder="Description"></textarea><br><br>
+      <input type="number" name="price" placeholder="Price" required /><br><br>
+      <input type="number" name="stock" placeholder="Stock" required /><br><br>
+      <select name="category" id="categorySelect" required>
+        <option value="">Select a category</option>
+      </select><br><br>
+      <input type="file" name="image" accept="image/*" required /><br><br>
+      <button type="submit">Upload Product</button>
+      <button type="button" onclick="document.getElementById('productForm').style.display='none'">Cancel</button>
+
+
+    </form>
+
+
+  </div>
+
+
+  <script>
+    let selectedProductId = null;
+
+    async function fetchProducts() {
+      try {
+        const res = await fetch('http://localhost:5000/products/display');
+        const products = await res.json();
+        renderProducts(products);
+      } catch (err) {
+        alert('Failed to load products.');
+      }
+    }
+
+    function renderProducts(products) {
+      const tbody = document.getElementById('productBody');
+      tbody.innerHTML = '';
+      products.forEach(p => {
+        const row = `<tr>
+  <td><img src="http://localhost:5000${p.image || '/images/default.png'}" alt="${p.name}" width="50" /></td>
+  <td>${p.name}</td>
+  <td>${p.description}</td>
+  <td>$${p.price}</td>
+  <td>${p.stock}</td>
+  <td>${p.categoryName || 'N/A'}</td>
+  <td><input type="radio" name="selectedProduct" value="${p.id}" /></td>
+</tr>`;
+
+        tbody.insertAdjacentHTML('beforeend', row);
+      });
+    }
+
+    function showSection(sectionId) {
+      document.querySelectorAll('.admin-section').forEach(s => s.classList.add('hidden'));
+      document.getElementById(sectionId).classList.remove('hidden');
+      if (sectionId === 'messages') {
+        fetchMessages();
+      }
+    }
+
+    function addProduct() {
+      document.getElementById('productForm').style.display = 'block';
+      fetchCategories();
+    }
+
+    document.getElementById('productForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+
+      try {
+        await fetch('http://localhost:5000/products', {
+          method: 'POST',
+          body: formData
+        });
+        form.reset();
+        form.style.display = 'none';
+        fetchProducts();
+      } catch (err) {
+        alert('Error uploading product.');
+      }
+    });
+
+    async function deleteSelectedProduct() {
+      const selected = document.querySelector('input[name="selectedProduct"]:checked');
+      if (!selected) return alert('Select a product to delete.');
+      const id = selected.value;
+      try {
+        await fetch(`http://localhost:5000/products/${id}`, { method: 'DELETE' });
+        fetchProducts();
+      } catch (err) {
+        alert('Failed to delete product.');
+      }
+    }
+
+
+    async function updateSelectedProduct() {
+      const selected = document.querySelector('input[name="selectedProduct"]:checked');
+      if (!selected) return alert('Select a product to update.');
+
+      const id = selected.value;
+
+      // Create modal overlay
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+
+      // Create form container
+      const formContainer = document.createElement('div');
+      formContainer.className = 'modal-form-container';
+
+      // Your form element
+      const form = document.createElement('form');
+      form.innerHTML = `
+  <h3 class="form-title">Update Product</h3>
+  <div class="form-group"><input type="text" name="name" placeholder="New name" /></div>
+  <div class="form-group"><textarea name="description" placeholder="New description"></textarea></div>
+  <div class="form-group"><input type="number" name="price" placeholder="New price" /></div>
+  <div class="form-group"><input type="number" name="stock" placeholder="New stock" /></div>
+  <div class="form-group">
+    <select name="category" id="updateCategorySelect">
+      <option value="">Select a category</option>
+    </select>
+  </div>
+  <div class="form-group"><input type="file" name="image" accept="image/*" /></div>
+  <div class="form-actions">
+    <button type="submit" class="btn-primary">Update</button>
+    <button type="button" class="btn-secondary" onclick="document.body.removeChild(document.querySelector('.modal-overlay'))">Cancel</button>
+  </div>
+`;
+      fetchCategoriesForUpdate();
+      async function fetchCategoriesForUpdate() {
+        try {
+          const res = await fetch('http://localhost:5000/categories');
+          const categories = await res.json();
+          const select = document.getElementById('updateCategorySelect');
+          categories.forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat.id;
+            option.textContent = cat.name;
+            select.appendChild(option);
+          });
+        } catch (err) {
+          alert('Failed to load categories');
+        }
+      }
+
+
+      // Append form to container, then to modal
+      formContainer.appendChild(form);
+      modal.appendChild(formContainer);
+
+      // Append modal to body
+      document.body.appendChild(modal);
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+
+        try {
+          await fetch(`http://localhost:5000/products/${id}`, {
+            method: 'PUT',
+            body: formData
+          });
+          document.body.removeChild(modal);
+          fetchProducts();
+        } catch (err) {
+          alert('Failed to update product.');
+        }
+      });
+    }
+
+    async function fetchCategories() {
+      try {
+        const res = await fetch('http://localhost:5000/categories');
+        const categories = await res.json();
+        const select = document.getElementById('categorySelect');
+        select.innerHTML = '<option value="">Select a category</option>';
+        categories.forEach(cat => {
+          const option = document.createElement('option');
+          option.value = cat.id;
+          option.textContent = cat.name;
+          select.appendChild(option);
+        });
+      } catch (err) {
+        alert('Failed to load categories.');
+      }
+    }
+
+    async function fetchMessages() {
+      try {
+        const res = await fetch('http://localhost:5000/messages');
+        const messages = await res.json();
+        renderMessages(messages);
+      } catch (err) {
+        alert('Failed to load messages.');
+      }
+    }
+
+    function renderMessages(messages) {
+      const tbody = document.getElementById('messageBody');
+      tbody.innerHTML = '';
+
+      messages.forEach(msg => {
+        const row = `
+      <tr>
+        <td>${msg.name}</td>
+        <td>${msg.email}</td>
+        <td>${msg.message}</td>
+        <td>${new Date(msg.timestamp).toLocaleString()}</td>
+      </tr>
+    `;
+        tbody.insertAdjacentHTML('beforeend', row);
+      });
+    }
+
+    // Logout functionality
+    document.addEventListener('click', (e) => {
+      if (e.target.id === 'logoutBtn') {
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
+        alert('Logged out successfully.');
+        window.location.href = 'login.html';
+      }
+    });
+
+    fetchProducts();
+  </script>
+</body>
+
+</html>
