@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Bloom Pantry</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <link rel="stylesheet" href="styles/checkout.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="logo">Bloom Pantry</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="products.html">Products</a>
+        </nav>
+        <div class="nav-icons">
+            <a href="signup.html"><i class="fa-regular fa-user"></i></a>
+        </div>
+    </header>
+
+    <div class="shipping-banner">Free Shipping on orders above 100$ and on online payment</div>
+
+    <main class="checkout-container">
+        <form id="billingForm" class="billing-form">
+            <h2>Billing</h2>
+            <input type="email" name="email" placeholder="Email" required>
+            <div class="form-row">
+                <input type="text" name="country" placeholder="Country" required>
+                <input type="text" name="city" placeholder="City" required>
+            </div>
+            <input type="text" name="address" placeholder="Address" required>
+            <div class="form-row">
+                <input type="text" name="firstName" placeholder="First Name" required>
+                <input type="text" name="lastName" placeholder="Last Name" required>
+            </div>
+            <input type="tel" name="phone" placeholder="Phone Number" required>
+
+            <div>
+                <label>Payment Method:</label><br />
+                <input type="radio" name="paymentMethod" value="cash" checked> Cash on Delivery<br />
+                <input type="radio" name="paymentMethod" value="online"> Online Payment
+            </div>
+
+            <button type="submit">Place Order</button>
+        </form>
+
+        <div class="order-summary">
+            <h3>Order Summary:</h3>
+            <div id="summaryItems" class="summary-items"></div>
+            <p>Total: <span id="orderTotal">$0</span></p>
+            <p>Shipping: <span id="orderShipping">$0</span></p>
+            <p>Subtotal: <span id="orderSubtotal">$0</span></p>
+        </div>
+
+
+    </main>
+
+    <script>
+
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        let currentUserId = null;
+
+        function parseJwt(token) {
+            try {
+                return JSON.parse(atob(token.split('.')[1]));
+            } catch (e) {
+                return null;
+            }
+        }
+
+        if (token) {
+            const payload = parseJwt(token);
+            if (payload && payload.id) {
+                currentUserId = payload.id;
+                console.log("Logged-in user ID:", currentUserId);
+            } else {
+                console.warn("Invalid token or missing user ID.");
+            }
+        } else {
+            console.log("Proceeding as guest , no token found.");
+        }
+
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function renderSummary() {
+            const container = document.getElementById('summaryItems');
+            container.innerHTML = '';
+            let total = 0;
+
+            cart.forEach(item => {
+                const itemTotal = item.quantity * item.price;
+                total += itemTotal;
+
+                const div = document.createElement('div');
+                div.className = 'summary-item';
+                div.innerHTML = `
+                <span>${item.quantity}x</span>
+                <img src="http://localhost:5000${item.image}" alt="${item.name}" style="width:40px; margin: 0 10px;">
+                <span>${item.name}</span>
+                <span>$${item.price}</span>
+            `;
+                container.appendChild(div);
+            });
+
+            const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+            const shipping = (total > 100 || selectedPayment === 'online') ? 0 : 20;
+            const subtotal = total + shipping;
+
+            document.getElementById('orderTotal').textContent = `$${total}`;
+            document.getElementById('orderShipping').textContent = `$${shipping}`;
+            document.getElementById('orderSubtotal').textContent = `$${subtotal}`;
+        }
+
+        document.querySelectorAll('input[name="paymentMethod"]').forEach(input => {
+            input.addEventListener('change', renderSummary);
+        });
+
+        document.getElementById('billingForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            data.items = cart;
+            data.userId = currentUserId;
+
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            };
+
+            if (data.paymentMethod === 'online') {
+                try {
+                    const res = await fetch('http://localhost:5000/stripe/create-session', {
+                        method: 'POST',
+                        headers,
+                        body: JSON.stringify(data)
+                    });
+
+                    const session = await res.json();
+                    if (session.id) {
+                        stripe.redirectToCheckout({ sessionId: session.id });
+                    } else {
+                        alert('Failed to create Stripe session.');
+                    }
+                } catch (err) {
+                    alert('Stripe error: ' + err.message);
+                }
+            } else {
+                try {
+                    const res = await fetch('http://localhost:5000/orders/create', {
+                        method: 'POST',
+                        headers,
+                        body: JSON.stringify(data)
+                    });
+
+                    if (res.ok) {
+                        alert('Order placed successfully!');
+                        localStorage.removeItem('cart');
+                        window.location.href = 'thankyou.html';
+                    } else {
+                        const err = await res.json();
+                        alert('Order failed: ' + err.message);
+                    }
+                } catch (err) {
+                    alert('Error placing order.');
+                }
+            }
+        });
+
+        renderSummary();
+    </script>
+
+
+
+</body>
+
+</html>

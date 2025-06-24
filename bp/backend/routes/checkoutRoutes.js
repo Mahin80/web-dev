@@ -1,0 +1,8 @@
+const express = require('express');
+const router = express.Router();
+const stripeController = require('../controllers/checkoutController');
+
+router.post('/create-session', stripeController.createStripeSession);
+router.get('/orders/success', stripeController.handleSuccess);
+
+module.exports = router;
