@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us - Bloom Pantry</title>
+  <link rel="stylesheet" href="styles/contact.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Baskervville&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <header class="main-header">
+    <div class="logo">Bloom Pantry</div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="products.html">Products</a>
+    </nav>
+    <div class="nav-icons">
+      <a href="signup.html"><i class="fa-regular fa-user"></i></a>
+
+      <i class="fa-solid fa-cart-shopping"></i>
+    </div>
+  </header>
+
+  
+  <section class="contact-header">
+    <h1>Contact Us</h1>
+    <p>We'd love to hear from you. Reach out with any questions, suggestions, or just to say hi!</p>
+  </section>
+
+  <section class="contact-container">
+    <div class="contact-info">
+      <h2>Get in Touch</h2>
+      <p>Email: contact@bloompantry.com</p>
+      <p>Phone: +92 300 1234567</p>
+      <p>Address: 123 Orchard Lane, Jamville</p>
+    </div>
+
+    <div class="contact-form">
+      <h2>Send a Message</h2>
+      <form id="contactForm">
+        <input type="text" name="name" placeholder="Your Name" required />
+        <input type="email" name="email" placeholder="Your Email" required />
+        <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </section>
+
+   <!-- Cart Sidebar -->
+<div id="cartSidebar" class="cart-sidebar hidden">
+  <button id="closeCart" class="close-cart-btn">&#8592;</button>
+  <h2>Shopping Cart</h2>
+  <div id="cartItems"></div>
+</div>
+
+  <footer class="site-footer">
+    <p class="footer-copy">© 2025 Bloom Pantry. All rights reserved.</p>
+
+  </footer>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        message: formData.get('message'),
+      };
+
+      try {
+        const res = await fetch('http://localhost:5000/messages/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
+          alert('Message sent successfully!');
+          this.reset();
+        } else {
+          console.error('Error:', res.statusText);
+          alert('Something went wrong.');
+        }
+      } catch (err) {
+        alert('Failed to send message.');
+      }
+    });
+  </script>
+  
+ <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    updateCartIcon();
+
+    const cartIcon = document.querySelector('.fa-cart-shopping');
+    const cartSidebar = document.getElementById('cartSidebar');
+    const closeCartBtn = document.getElementById('closeCart');
+
+    if (cartIcon) {
+      cartIcon.addEventListener('click', () => {
+        cartSidebar.classList.add('show');
+        renderCartItems();
+      });
+    }
+
+    if (closeCartBtn) {
+      closeCartBtn.addEventListener('click', () => {
+        cartSidebar.classList.remove('show');
+      });
+    }
+  });
+</script>
+<script src="cart.js"></script> 
+
+</body>
+
+</html>

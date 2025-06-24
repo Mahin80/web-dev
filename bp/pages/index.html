@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bloom Pantry</title>
+    <link rel="stylesheet" href="styles/index.css" />
+    <link rel="stylesheet" href="styles/footer.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Baskervville&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="logo">Bloom Pantry</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="products.html">Products</a>
+        </nav>
+        <div class="nav-icons">
+            <a href="signup.html" style="color: black;"><i class="fa-regular fa-user"></i></a>
+            <i class="fa-solid fa-cart-shopping"></i>
+        </div>
+    </header>
+
+    <div id="cartSidebar" class="cart-sidebar hidden">
+        <button id="closeCart" class="close-cart-btn">&#8592;</button>
+        <h2>Shopping Cart</h2>
+        <div id="cartItems"></div>
+    </div>
+
+    <section class="hero-image">
+        <img src="images/sjam.jpg" alt="Fresh Strawberries and Jam" />
+        <div class="image-text">
+            <p>
+            <h2> Welcome to <strong>Bloom Pantry</strong></h2> Here every jar tells a story of sun-ripened fruits,
+            handpicked mornings, and small-batch goodness. Our artisanal jams and natural mixes are crafted with care,
+            using only the freshest, farm-grown ingredients. Taste the season. Taste the simplicity.
+            </p>
+        </div>
+    </section>
+
+    <section class="products" style="margin-top: 40px; background-color: #fffaf3;">
+        <div class="container">
+            <h2>Our Products</h2>
+            <div class="product-list">
+                <div class="product-item">
+                    <img src="images/sjam2.png" alt="Strawberry Jam" />
+                    <h3>Strawberry Jam</h3>
+                    <p>Made with fresh strawberries, this jam is a sweet delight.</p>
+                </div>
+                <div class="product-item">
+                    <img src="images/bjam.png" alt="Blueberry Jam" />
+                    <h3>Blueberry Jam</h3>
+                    <p>Rich in flavor, our blueberry jam is perfect for breakfast.</p>
+                </div>
+                <div class="product-item">
+                    <img src="images/ojam.png" alt="Orange Marmalade" />
+                    <h3>Orange Marmalade</h3>
+                    <p>A delightful blend of citrus peels and zest in every spoon.</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="products.html" style="
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #8a422b;
+                color: white;
+                text-decoration: none;
+                font-family: serif;
+                border-radius: 5px;
+                transition: background-color 0.3s;
+            " onmouseover="this.style.backgroundColor='#a94c36'" onmouseout="this.style.backgroundColor='#8a422b'">
+                    See More Products
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartIcon();
+
+            const cartIcon = document.querySelector('.fa-cart-shopping');
+            const cartSidebar = document.getElementById('cartSidebar');
+            const closeCartBtn = document.getElementById('closeCart');
+
+            if (cartIcon) {
+                cartIcon.addEventListener('click', () => {
+                    cartSidebar.classList.add('show');
+                    renderCartItems();
+                });
+            }
+
+            if (closeCartBtn) {
+                closeCartBtn.addEventListener('click', () => {
+                    cartSidebar.classList.remove('show');
+                });
+            }
+        });
+
+    </script>
+    <script src="cart.js"></script>
+
+</body>
+
+
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-columns">
+
+            <!-- Column 1: Contact Info -->
+            <div class="footer-col contact-info">
+                <h3>Contact Us</h3>
+                <p>Email: contact@bloompantry.com</p>
+                <p>Phone: +92 300 1234567</p>
+                <p>Address: 123 Orchard Lane, Jamville</p>
+            </div>
+
+            <!-- Column 2: Social Links -->
+            <div class="footer-col social-links">
+                <h3>Follow Us</h3>
+                <div class="footer-socials">
+                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <p class="footer-copy">© 2025 Bloom Pantry. All rights reserved.</p>
+    </div>
+</footer>
+
+
+</html>

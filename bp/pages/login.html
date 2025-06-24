@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Bloom Pantry</title>
+  <link rel="stylesheet" href="styles/auth.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Baskervville&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+  <header class="main-header">
+    <div class="logo">Bloom Pantry</div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="products.html">Products</a>
+    </nav>
+    <div class="nav-icons">
+      <a href="signup.html" style="color: black;"><i class="fa-regular fa-user"></i></a>
+      <i class="fa-solid fa-cart-shopping"></i>
+    </div>
+  </header>
+
+  <div class="auth-container">
+    <h1>Login</h1>
+    <form id="loginForm">
+      <input type="text" id="loginIdentifier" placeholder="Username or Email" required />
+      <input type="password" id="loginPassword" placeholder="Password" required />
+      <div class="auth-options">
+        <label><input type="checkbox" id="rememberMe" /> Remember Me</label>
+        <a href="forgotpassword.html">Forgot Password?</a>
+      </div>
+      <button type="submit">Login</button>
+      <p id="loginMessage" style="color: red;"></p>
+      <p>Don't have an account? <a href="signup.html">Signup</a></p>
+    </form>
+  </div>
+
+  <div id="cartSidebar" class="cart-sidebar hidden">
+    <button id="closeCart" class="close-cart-btn">&#8592;</button>
+    <h2>Shopping Cart</h2>
+    <div id="cartItems"></div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const loginMessage = document.getElementById('loginMessage');
+
+    function parseJwt(token) {
+      try {
+        return JSON.parse(atob(token.split('.')[1]));
+      } catch (e) {
+        return null;
+      }
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const identifier = document.getElementById('loginIdentifier').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const rememberMe = document.getElementById('rememberMe').checked;
+
+      try {
+        const res = await fetch('http://localhost:5000/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: identifier,
+            password
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          const storage = rememberMe ? localStorage : sessionStorage;
+          storage.setItem('token', data.token);
+          loginMessage.style.color = 'green';
+          loginMessage.textContent = 'Login successful!';
+          setTimeout(() => {
+            // Check if the user is an admin
+            const payload = parseJwt(data.token);
+            const isAdmin = payload && payload.isAdmin;
+            console.log('Is Admin:', isAdmin); // Debugging line
+            if (isAdmin) {
+              window.location.href = 'admin.html';
+            } else {
+              window.location.href = 'account.html';
+            }
+          }, 1200);
+        } else {
+          loginMessage.style.color = 'red';
+          loginMessage.textContent = data.message || 'Login failed';
+        }
+      } catch (err) {
+        loginMessage.textContent = 'Server error. Please try again.';
+      }
+    });
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCartIcon();
+
+      const cartIcon = document.querySelector('.fa-cart-shopping');
+      const cartSidebar = document.getElementById('cartSidebar');
+      const closeCartBtn = document.getElementById('closeCart');
+
+      if (cartIcon) {
+        cartIcon.addEventListener('click', () => {
+          cartSidebar.classList.add('show');
+          renderCartItems();
+        });
+      }
+
+      if (closeCartBtn) {
+        closeCartBtn.addEventListener('click', () => {
+          cartSidebar.classList.remove('show');
+        });
+      }
+    });
+  </script>
+  <script src="cart.js"></script>
+
+</body>
+
+</html>

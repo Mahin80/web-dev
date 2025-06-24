@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signup - Bloom Pantry</title>
+  <link rel="stylesheet" href="styles/auth.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Baskervville&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+   <header class="main-header">
+    <div class="logo">Bloom Pantry</div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="products.html">Products</a>
+    </nav>
+    <div class="nav-icons">
+      <a href="signup.html" style="color: black;"><i class="fa-regular fa-user"></i></a>
+      <i class="fa-solid fa-cart-shopping"></i>
+    </div>
+  </header>
+
+  <div class="auth-container">
+    <h1>Signup</h1>
+    <form id="signupForm">
+      <input type="text" id="username" placeholder="Username" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
+
+      <input type="text" id="firstName" placeholder="First Name" required />
+      <input type="text" id="lastName" placeholder="Last Name" required />
+
+      <button type="submit">Register</button>
+      <p id="signupMessage" style="color: red;"></p>
+      <p>Already have an account? <a href="login.html">Login</a></p>
+    </form>
+  </div>
+
+  <div id="cartSidebar" class="cart-sidebar hidden">
+    <button id="closeCart" class="close-cart-btn">&#8592;</button>
+    <h2>Shopping Cart</h2>
+    <div id="cartItems"></div>
+  </div>
+
+  <script>
+    const signupForm = document.getElementById('signupForm');
+    const signupMessage = document.getElementById('signupMessage');
+
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (password !== confirmPassword) {
+        signupMessage.textContent = 'Passwords do not match';
+        return;
+      }
+
+      const userData = {
+        username: document.getElementById('username').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        password: password,
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim()
+      };
+
+      try {
+        const res = await fetch('http://localhost:5000/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(userData)
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          signupMessage.style.color = 'green';
+          signupMessage.textContent = 'Signup successful! Redirecting to login...';
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 1500);
+        } else {
+          signupMessage.textContent = data.message || 'Signup failed';
+        }
+      } catch (err) {
+        signupMessage.textContent = 'Server error. Please try again.';
+      }
+    });
+
+     document.addEventListener('DOMContentLoaded', () => {
+      updateCartIcon();
+
+      const cartIcon = document.querySelector('.fa-cart-shopping');
+      const cartSidebar = document.getElementById('cartSidebar');
+      const closeCartBtn = document.getElementById('closeCart');
+
+      if (cartIcon) {
+        cartIcon.addEventListener('click', () => {
+          cartSidebar.classList.add('show');
+          renderCartItems();
+        });
+      }
+
+      if (closeCartBtn) {
+        closeCartBtn.addEventListener('click', () => {
+          cartSidebar.classList.remove('show');
+        });
+      }
+    });
+
+  </script>
+  <script src="cart.js"></script>
+</body>
+
+</html>

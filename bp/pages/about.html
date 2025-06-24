@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bloom Pantry</title>
+    <link rel="stylesheet" href="styles/about.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Baskervville&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="logo">Bloom Pantry</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="contact.html">Contact</a>
+            <a href="products.html">Products</a>
+        </nav>
+        <div class="nav-icons">
+            <i class="fa-regular fa-user"></i>
+            <i class="fa-solid fa-cart-shopping"></i>
+        </div>
+    </header>
+
+    <header class="about-header">
+        <h1>About Us</h1>
+    </header>
+
+    <section class="brand-story">
+        <div class="story-content">
+            <h2>Our Story</h2>
+            <p>
+                Bloom Pantry began as a weekend passion project. A handful of handpicked berries, a beloved family
+                recipe, and the dream of sharing homemade goodness with the world.
+                Today, our team continues that tradition — crafting honest food with the same love and care as the very
+                first jar.
+            </p>
+            <p>
+                From farmers' markets to online shelves, our journey is one of flavor, friendship, and community. We
+                invite you to be part of our story and share the sweetness.
+            </p>
+        </div>
+        <div class="story-image">
+            <img src="images/stgarden.png" alt="Bloom Pantry Founders" />
+        </div>
+    </section>
+
+    <section class="break-banner">
+        <div class="break-text">
+            <h2>From Our Garden to Your Table</h2>
+        </div>
+    </section>
+
+    <section class="about-intro">
+        <div class="about-text">
+            <h2>Rooted in Nature, Made with Heart</h2>
+            <p>
+                At <strong>Bloom Pantry</strong>, we believe that the best things in life are simple, pure, and made by
+                hand.
+                What started in a small countryside kitchen is now a growing pantry of homemade jams, marmalades, and
+                natural mixes — all made with real fruits, no preservatives, and lots of love.
+            </p>
+            <p>
+                Our mission is to bring the flavors of the season straight to your table. Whether it’s a spoonful of
+                wild strawberry jam or a jar of citrus marmalade, each product is thoughtfully prepared in small batches
+                to preserve freshness, flavor, and authenticity.
+            </p>
+        </div>
+        <div class="about-img">
+            <img src="images/jams.jpeg" alt="Our Pantry Kitchen" />
+        </div>
+    </section>
+
+    <div id="cartSidebar" class="cart-sidebar hidden">
+        <button id="closeCart" class="close-cart-btn">&#8592;</button>
+        <h2>Shopping Cart</h2>
+        <div id="cartItems"></div>
+    </div>
+
+    <section class="values">
+        <h2>What We Value</h2>
+        <div class="value-cards">
+            <div class="card">
+                <h3>Handcrafted</h3>
+                <p>Every jar is made with attention to detail, using traditional methods and real ingredients.</p>
+            </div>
+            <div class="card">
+                <h3>Seasonal & Local</h3>
+                <p>We source fruits from trusted local farms, supporting sustainability and peak freshness.</p>
+            </div>
+            <div class="card">
+                <h3>Simple Ingredients</h3>
+                <p>No additives. No shortcuts. Just real fruit, natural sugars, and time-honored recipes.</p>
+            </div>
+        </div>
+    </section>
+    <section class="pics">
+        <img src="images/stplate.png" alt="Assorted fresh fruits arranged on a white plate" />
+    </section>
+
+    <footer class="site-footer">
+        <p>© 2025 Bloom Pantry. Made with love.</p>
+    </footer>
+
+      <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCartIcon();
+
+      const cartIcon = document.querySelector('.fa-cart-shopping');
+      const cartSidebar = document.getElementById('cartSidebar');
+      const closeCartBtn = document.getElementById('closeCart');
+
+      if (cartIcon) {
+        cartIcon.addEventListener('click', () => {
+          cartSidebar.classList.add('show');
+          renderCartItems();
+        });
+      }
+
+      if (closeCartBtn) {
+        closeCartBtn.addEventListener('click', () => {
+          cartSidebar.classList.remove('show');
+        });
+      }
+    });
+  </script>
+  <script src="cart.js"></script>
+
+
+</body>
+
+</html>
