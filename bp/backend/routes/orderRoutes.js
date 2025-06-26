@@ -5,7 +5,7 @@ const orderController = require('../controllers/ordersController');
 // GET all orders by user ID
 router.get('/user/:id', orderController.getOrdersByUser);
 
-// POST create a new order
+// create a new order
 router.post('/create', orderController.createOrder);
 
 module.exports = router;

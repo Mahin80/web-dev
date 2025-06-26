@@ -19,13 +19,13 @@
       <a href="products.html">Products</a>
     </nav>
     <div class="nav-icons">
-      <a href="signup.html"><i class="fa-regular fa-user"></i></a>
+      <a id="userIconLink"><i class="fa-regular fa-user"></i></a>
 
       <i class="fa-solid fa-cart-shopping"></i>
     </div>
   </header>
 
-  
+
   <section class="contact-header">
     <h1>Contact Us</h1>
     <p>We'd love to hear from you. Reach out with any questions, suggestions, or just to say hi!</p>
@@ -50,12 +50,12 @@
     </div>
   </section>
 
-   <!-- Cart Sidebar -->
-<div id="cartSidebar" class="cart-sidebar hidden">
-  <button id="closeCart" class="close-cart-btn">&#8592;</button>
-  <h2>Shopping Cart</h2>
-  <div id="cartItems"></div>
-</div>
+  <!-- Cart Sidebar -->
+  <div id="cartSidebar" class="cart-sidebar hidden">
+    <button id="closeCart" class="close-cart-btn">&#8592;</button>
+    <h2>Shopping Cart</h2>
+    <div id="cartItems"></div>
+  </div>
 
   <footer class="site-footer">
     <p class="footer-copy">© 2025 Bloom Pantry. All rights reserved.</p>
@@ -90,31 +90,40 @@
         alert('Failed to send message.');
       }
     });
-  </script>
   
- <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    updateCartIcon();
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCartIcon();
 
-    const cartIcon = document.querySelector('.fa-cart-shopping');
-    const cartSidebar = document.getElementById('cartSidebar');
-    const closeCartBtn = document.getElementById('closeCart');
+      const cartIcon = document.querySelector('.fa-cart-shopping');
+      const cartSidebar = document.getElementById('cartSidebar');
+      const closeCartBtn = document.getElementById('closeCart');
 
-    if (cartIcon) {
-      cartIcon.addEventListener('click', () => {
-        cartSidebar.classList.add('show');
-        renderCartItems();
-      });
-    }
+      if (cartIcon) {
+        cartIcon.addEventListener('click', () => {
+          cartSidebar.classList.add('show');
+          renderCartItems();
+        });
+      }
 
-    if (closeCartBtn) {
-      closeCartBtn.addEventListener('click', () => {
-        cartSidebar.classList.remove('show');
-      });
-    }
-  });
-</script>
-<script src="cart.js"></script> 
+      if (closeCartBtn) {
+        closeCartBtn.addEventListener('click', () => {
+          cartSidebar.classList.remove('show');
+        });
+      }
+    });
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+      const userLink = document.getElementById('userIconLink');
+
+      if (token) {
+        userLink.setAttribute('href', 'account.html');
+      } else {
+        userLink.setAttribute('href', 'signup.html');
+      }
+    });
+  </script>
+  <script src="cart.js"></script>
 
 </body>
 

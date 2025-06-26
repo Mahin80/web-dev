@@ -19,7 +19,7 @@
       <a href="products.html">Products</a>
     </nav>
     <div class="nav-icons" style="font-family: serif;">
-      <a href="signup.html"><i class="fa-regular fa-user"></i></a>
+      <a id="userIconLink"><i class="fa-regular fa-user"></i></a>
       <i class="fa-solid fa-cart-shopping"></i>
     </div>
   </header>
@@ -38,8 +38,6 @@
         <option value="all">All</option>
       </select>
     </div>
-
-
     <div id="productGrid" class="product-grid"></div>
   </main>
 
@@ -48,8 +46,6 @@
     <h2>Shopping Cart</h2>
     <div id="cartItems"></div>
   </div>
-
-
 
   <script>
 
@@ -150,23 +146,6 @@
       renderProducts(filtered);
     }
 
-    document.getElementById('categorySelect').addEventListener('change', filterProducts);
-    document.getElementById('filter').addEventListener('change', function () {
-      const sortType = this.value;
-      const categorySelect = document.getElementById('categorySelect');
-      const categoryLabel = document.getElementById('categoryLabel');
-
-      if (sortType === 'category') {
-        categorySelect.style.display = 'inline-block';
-        categoryLabel.style.display = 'inline-block';
-        fetchCategories();
-      } else {
-        categorySelect.style.display = 'none';
-        categoryLabel.style.display = 'none';
-        filterProducts(); // Re-render by name
-      }
-    });
-
     function addToCart(id, name, price, image, categoryId) {
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
@@ -187,104 +166,60 @@
       alert(`${name} added to cart.`);
     }
 
-    function renderCartItems() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const container = document.getElementById('cartItems');
-      container.innerHTML = '';
+    document.getElementById('categorySelect').addEventListener('change', filterProducts);
+    document.getElementById('filter').addEventListener('change', function () {
+      const sortType = this.value;
+      const categorySelect = document.getElementById('categorySelect');
+      const categoryLabel = document.getElementById('categoryLabel');
 
-      if (cart.length === 0) {
-        container.innerHTML = '<p style="font-family: Serif; margin-left: 50px; margin-top: 50px;">Your cart is empty.</p>';
-        return;
+      if (sortType === 'category') {
+        categorySelect.style.display = 'inline-block';
+        categoryLabel.style.display = 'inline-block';
+        fetchCategories();
+      } else {
+        categorySelect.style.display = 'none';
+        categoryLabel.style.display = 'none';
+        filterProducts(); // Re-render by name
       }
-
-      let totalCartAmount = 0;
-
-      cart.forEach((item, index) => {
-        const total = item.price * item.quantity;
-        totalCartAmount += total;
-
-        const card = `
-      <div class="cart-item" style="border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;">
-        <img src="http://localhost:5000${item.image}" alt="${item.name}" style="width: 50px; margin-right: 10px;">
-        <div>
-          <span style="display:block;"><strong>${item.name}</strong></span>
-          <span>${item.price}$ x ${item.quantity}</span><br/>
-          <span>Total: ${total}$</span>
-        </div>
-        <div class="cart-actions" style="margin-left: auto; display: flex; flex-direction: row; gap: 4px;">
-          <button onclick="changeQuantity(${index}, -1)"><i class="fa-solid fa-minus"></i></button>
-          <button onclick="changeQuantity(${index}, 1)"><i class="fa-solid fa-plus"></i></button>
-          <button onclick="removeFromCart(${index})"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-      </div>
-    `;
-        container.insertAdjacentHTML('beforeend', card);
-      });
-
-      // Append total and checkout button
-      container.insertAdjacentHTML('beforeend', `
-    <div class="cart-total" style="margin-top: 20px; border-top: 2px solid #999; padding-top: 10px; font-family: serif;">
-      <p style="font-size: 16px;"><strong>Total: ${totalCartAmount.toFixed(2)}$</strong></p>
-      <button onclick="goToCheckout()" style="padding: 10px 15px; font-family: serif; background: #8a422b; color: white; border: none; cursor: pointer; border-radius: 5px;">Go to Checkout</button>
-    </div>
-  `);
-    }
-
-    function removeFromCart(index) {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      cart.splice(index, 1); // remove item at given index
-      localStorage.setItem('cart', JSON.stringify(cart));
-      updateCartIcon();
-      renderCartItems();
-    }
-    // Open cart when clicking cart icon
-    document.querySelector('.fa-cart-shopping').addEventListener('click', () => {
-      const sidebar = document.getElementById('cartSidebar');
-      sidebar.classList.add('show');
-      renderCartItems();
-    });
-    // Close cart when clicking arrow button
-    document.getElementById('closeCart').addEventListener('click', () => {
-      const sidebar = document.getElementById('cartSidebar');
-      sidebar.classList.remove('show');
     });
 
-    function changeQuantity(index, delta) {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      cart[index].quantity += delta;
-
-      if (cart[index].quantity <= 0) {
-        cart.splice(index, 1);
-      }
-
-      localStorage.setItem('cart', JSON.stringify(cart));
+    document.addEventListener('DOMContentLoaded', () => {
       updateCartIcon();
-      renderCartItems();
-    }
 
-    function updateCartIcon() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const total = cart.reduce((sum, item) => sum + item.quantity, 0);
-      const icon = document.querySelector('.fa-cart-shopping');
-      if (!icon) return;
+      const cartIcon = document.querySelector('.fa-cart-shopping');
+      const cartSidebar = document.getElementById('cartSidebar');
+      const closeCartBtn = document.getElementById('closeCart');
 
-      let badge = document.querySelector('.cart-count');
-      if (!badge) {
-        badge = document.createElement('span');
-        badge.classList.add('cart-count');
-        icon.parentElement.appendChild(badge);
+      if (cartIcon) {
+        cartIcon.addEventListener('click', () => {
+          cartSidebar.classList.add('show');
+          renderCartItems();
+        });
       }
 
-      badge.textContent = total > 0 ? total : '';
-    }
+      if (closeCartBtn) {
+        closeCartBtn.addEventListener('click', () => {
+          cartSidebar.classList.remove('show');
+        });
+      }
+    });
 
-    function goToCheckout() {
-      window.location.href = 'checkout.html';
-    }
+    // check if the user is logged in 
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+      const userLink = document.getElementById('userIconLink');
 
+      if (token) {
+        userLink.setAttribute('href', 'account.html');
+      } else {
+        userLink.setAttribute('href', 'signup.html');
+      }
+    });
     fetchCategories();
     fetchProducts();
   </script>
+
+  <script src="cart.js"></script>
 
 </body>
 

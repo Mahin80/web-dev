@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -7,13 +8,15 @@ const messageRoutes = require('./routes/messageRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const stripeRoutes = require('./routes/checkoutRoutes');
+const webhookRoutes = require('./routes/webhookRoutes');
 const { sequelize, Product, User,Messages,Category } = require('./models');
 const path = require('path');
-
 const app = express();
 const PORT = 5000;
 
+
 app.use(cors());
+app.use('/webhook', webhookRoutes);
 app.use(bodyParser.json());
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
@@ -21,12 +24,9 @@ app.use('/messages', messageRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/orders', orderRoutes);
 app.use('/stripe', stripeRoutes);
-
-app.use('/pages', express.static(path.join(__dirname, '../pages')));
+app.use('/pages', express.static('../pages')); 
 
 app.use('/uploads', express.static('uploads')); // To serve uploaded images
-
-
 
 
 sequelize.sync({}).then(() => {

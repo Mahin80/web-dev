@@ -99,14 +99,20 @@
 
                 const user = await profileRes.json();
                 console.log("User data received:", user);
-//<p><strong>Phone Number:</strong> ${user.phone}</p>
+                //<p><strong>Phone Number:</strong> ${user.phone}</p>
                 // Display profile
                 document.getElementById('contactDetails').innerHTML = `
         <p><strong>First Name:</strong> ${user.firstName}</p>
         <p><strong>Last Name:</strong> ${user.lastName}</p>
         <p><strong>Email:</strong> ${user.email}</p>`;
+                // Display address
+                const addressBox = document.getElementById('addressDetails');
 
-
+                if (user.address) {
+                    addressBox.innerHTML = `<p>${user.address}</p>`;
+                } else {
+                    addressBox.innerHTML = `<p>No address saved yet.</p>`;
+                }
 
                 //  Fetch orders
                 console.log("Fetching orders for user ID:", user.id);
@@ -184,13 +190,7 @@
             }
         });
 
-        // Display address
-        const addressBox = document.getElementById('addressDetails');
-        if (user.address) {
-            addressBox.innerHTML = `<p>${user.address}</p>`;
-        } else {
-            addressBox.innerHTML = `<p>No address saved yet.</p>`;
-        }
+
 
 
 

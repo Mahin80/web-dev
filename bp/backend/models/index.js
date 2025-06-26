@@ -5,7 +5,7 @@ const sequelize = new Sequelize('testdb', 'localuser', '123456', {
   dialect: 'postgres'
 });
 
-// Load models using factory functions
+// Load models 
 const Product = require('./Products')(sequelize, DataTypes);
 const User = require('./User')(sequelize, DataTypes);
 const Message = require('./Message')(sequelize, DataTypes);

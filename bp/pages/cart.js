@@ -14,7 +14,7 @@ function updateCartIcon() {
   badge.textContent = total > 0 ? total : '';
 }
 
- function renderCartItems() {
+function renderCartItems() {
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
   const container = document.getElementById('cartItems');
   container.innerHTML = '';
@@ -70,31 +70,31 @@ function removeFromCart(index) {
 }
 
 
- function changeQuantity(index, delta) {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      cart[index].quantity += delta;
+function changeQuantity(index, delta) {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  cart[index].quantity += delta;
 
-      if (cart[index].quantity <= 0) {
-        cart.splice(index, 1);
-      }
+  if (cart[index].quantity <= 0) {
+    cart.splice(index, 1);
+  }
 
-      localStorage.setItem('cart', JSON.stringify(cart));
-      updateCartIcon();
-      renderCartItems();
-    }
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartIcon();
+  renderCartItems();
+}
 
-    function updateCartIcon() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const total = cart.reduce((sum, item) => sum + item.quantity, 0);
-      const icon = document.querySelector('.fa-cart-shopping');
-      if (!icon) return;
+function updateCartIcon() {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const icon = document.querySelector('.fa-cart-shopping');
+  if (!icon) return;
 
-      let badge = document.querySelector('.cart-count');
-      if (!badge) {
-        badge = document.createElement('span');
-        badge.classList.add('cart-count');
-        icon.parentElement.appendChild(badge);
-      }
+  let badge = document.querySelector('.cart-count');
+  if (!badge) {
+    badge = document.createElement('span');
+    badge.classList.add('cart-count');
+    icon.parentElement.appendChild(badge);
+  }
 
-      badge.textContent = total > 0 ? total : '';
-    }
+  badge.textContent = total > 0 ? total : '';
+}

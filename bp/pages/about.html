@@ -20,7 +20,7 @@
             <a href="products.html">Products</a>
         </nav>
         <div class="nav-icons">
-            <i class="fa-regular fa-user"></i>
+            <a id="userIconLink"><i class="fa-regular fa-user"></i></a>
             <i class="fa-solid fa-cart-shopping"></i>
         </div>
     </header>
@@ -124,6 +124,18 @@
         closeCartBtn.addEventListener('click', () => {
           cartSidebar.classList.remove('show');
         });
+      }
+    });
+
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+      const userLink = document.getElementById('userIconLink');
+
+      if (token) {
+        userLink.setAttribute('href', 'account.html');
+      } else {
+        userLink.setAttribute('href', 'signup.html');
       }
     });
   </script>

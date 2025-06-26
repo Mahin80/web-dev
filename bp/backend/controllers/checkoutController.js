@@ -1,3 +1,4 @@
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { Order, OrderItem, Product } = require('../models');
 
 exports.createStripeSession = async (req, res) => {
@@ -23,7 +24,7 @@ exports.createStripeSession = async (req, res) => {
       mode: 'payment',
       customer_email: email,
       line_items: lineItems,
-      success_url: 'http://localhost:5000/stripe/orders/success?session_id={CHECKOUT_SESSION_ID}',
+      success_url: 'http://localhost:5000/pages/thankyou.html',
       cancel_url: 'http://localhost:5000/checkout.html',
       metadata: {
         email,
@@ -39,55 +40,3 @@ exports.createStripeSession = async (req, res) => {
   }
 };
 
-exports.handleSuccess = async (req, res) => {
-  const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
-  const items = JSON.parse(session.metadata.cart);
-
-  console.log('Stripe session metadata:', session.metadata);
-
-  try {
-    let total = 0;
-    const orderItems = [];
-
-    for (const item of items) {
-      const product = await Product.findByPk(item.id);
-      if (!product) {
-        console.error('Missing product for ID:', item.id);
-        throw new Error(`Product not found for ID ${item.id}`);
-      }
-      const itemTotal = product.price * item.quantity;
-      total += itemTotal;
-      orderItems.push({ productId: product.id, quantity: item.quantity, price: product.price, name: product.name });
-    }
-
-    const shipping = (total > 100) ? 0 : 20;
-    const subtotal = total + shipping;
-
-    const orderData = {
-      email: session.metadata.email,
-      total,
-      shipping,
-      subtotal,
-      paymentMethod: 'stripe',
-      ...session.metadata
-    };
-
-    
-    if (!orderData.userId || orderData.userId === '') {
-      orderData.userId = null;
-    } else {
-      orderData.userId = parseInt(orderData.userId);
-    }
-
-    const order = await Order.create(orderData);
-
-    for (const item of orderItems) {
-      await OrderItem.create({ ...item, orderId: order.id });
-    }
-
-    res.redirect('/pages/thankyou.html');
-  } catch (err) {
-    console.error('Order saving failed:', err);
-    res.status(500).send('Order processing error.');
-  }
-};
