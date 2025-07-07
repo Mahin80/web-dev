@@ -1,0 +1,41 @@
+.account-container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.account-container .account-sections {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.account-container .contact-info,
+.account-container .address-book {
+  flex: 1;
+  background: #f1f1f1;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.account-container .orders-record {
+  margin-top: 40px;
+}
+
+.account-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.account-container table th,
+.account-container table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.account-container table th {
+  background-color: #f2f2f2;
+}

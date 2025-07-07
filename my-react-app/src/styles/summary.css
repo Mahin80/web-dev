@@ -1,0 +1,18 @@
+
+    .checkout-container { display: flex; padding: 20px; gap: 50px; }
+    .billing-form, .order-summary { flex: 1; }
+    .form-row { display: flex; gap: 10px; }
+    input[type=text], input[type=email], input[type=tel] { width: 95%; padding: 8px; margin: 5px 0; }
+    .summary-item { display: flex; align-items: center; margin: 5px 0; }
+    .shipping-banner { background: black; color: white; text-align: center; padding: 8px; }
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-family: serif;
+}
+.summary-item span {
+  flex: 1;
+}
